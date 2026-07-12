@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Barcode Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.6/JsBarcode.all.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            padding: 150px;
+            box-sizing: border-box;
+            background-color: #4e4e4e; /* Less retina damage */
+        }
+        #barcode {
+            width: 80%; /* Adjust as needed */
+            height: 40%; /* This will make the SVG responsive to its content */
+            margin: 40px auto; /* Center horizontally and add space below for better readability */
+        }
+        #download-btn, #upright-totems-btn, #full-page-btn {
+            background-color: #0369a1; /* Material-You teal color */
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 8px; /* Add rounded corners */
+        }
+        #download-btn:active, #upright-totems-btn:active, #full-page-btn:active {
+            background-color: #075985; /* Darker teal on press */
+        }
+        #barcode-input {
+            width: 98%; /* Adjust as needed */
+            padding: 25px; /* Add some space within the box for easier typing */
+            font-size: 48px; /* Increase the font size */
+            border: none; /* Remove default border */
+            border-radius: 7px; /* Add rounded corners */
+            background-color: #f5f5f5;
+            margin-bottom: 20px; /* Add space below the barcode for better readability */
+            text-align: center; /* Align text to center */
+            transform: scaleX(1); /* Reset any previous transformations (like from the SVG code) */
+            white-space: nowrap; /* Make sure the text doesn't wrap to a new line */
+        }
+        @media screen and (max-width: 480px) {
+            body { flex-direction: column; }
+            #barcode, #barcode-input { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;" id="barcode"></svg>
+    <input type="text" id="barcode-input" placeholder="Type here, press enter"/>
+    <button id="download-btn" disabled>Download Barcode
+        <i class="fas fa-download"></i> <!-- FontAwesome download icon -->
+    </button>
+    <button id="upright-totems-btn">
+        For Upright Totems
+        <i class="fas fa-link"></i> <!-- FontAwesome link icon -->
+    </button>
+    <button id="full-page-btn">
+        Full Page
+        <i class="fas fa-expand"></i> <!-- FontAwesome expand icon -->
+    </button>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('barcode-input').focus();
+        });
+        document.getElementById('barcode-input').addEventListener('keypress', function(e) {
+            if (e.which === 13) { // Enter key code is 13
+                var input = this.value;
+                if (!input || !input.trim()) return alert("Please enter a valid text");
+                JsBarcode("#barcode", input, { format: "CODE39", displayValue: true, lineColor : "#000000", width : 1.28, height : 60 });
+                document.getElementById('download-btn').disabled = false; // Enable the download button
+                this.focus();
+                this.select();
+            }
+        });
+        document.getElementById('download-btn').addEventListener('click', function() {
+            var svg = document.getElementById('barcode').outerHTML; // get SVG as string
+            var url = `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`; // Create a link and set its 'href' attribute to the SVG data URL
+            var link = document.createElement("a");
+            link.download = document.getElementById('barcode-input').value + ".svg"; // Set filename as input value
+            link.href = url; // Append anchor tag into body
+            document.body.appendChild(link); // Click it to start download
+            link.click();
+        });
+
+        document.getElementById('upright-totems-btn').addEventListener('click', function() {
+            window.location.href = "totems.html";
+        });
+
+        document.getElementById('full-page-btn').addEventListener('click', function() {
+            window.location.href = "large.html";
+        });
+    </script>
+</body>
+</html>

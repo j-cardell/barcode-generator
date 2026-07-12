@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Barcode Generator - Totems</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.6/JsBarcode.all.min.js"></script>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        height: 100vh;
+        margin: 0;
+        flex-direction: column;
+        padding: 150px;
+        box-sizing: border-box;
+        background-color: #4e4e4e; /* Less retina damage */
+      }
+
+      .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 80%;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .barcode-container {
+        margin-bottom: 50px; /* This controls the vertical distance between barcodes */
+      }
+
+      #barcode-input {
+        width: 98%; /* Adjust as needed */
+        padding: 25px; /* Add some space within the box for easier typing */
+        font-size: 48px; /* Increase the font size */
+        border: none; /* Remove default border */
+        border-radius: 7px; /* Add rounded corners */
+        background-color: #f5f5f5;
+        margin-bottom: 20px; /* Add space below the barcode for better readability */
+        text-align: center; /* Align text to center */
+        transform: scaleX(1); /* Reset any previous transformations (like from the SVG code) */
+        white-space: nowrap; /* Make sure the text doesn't wrap to a new line */
+      }
+
+      #download-btn {
+        background-color: #0369a1; /* Material-You teal color */
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 8px; /* Add rounded corners */
+        position: fixed; /* Set the button to be fixed */
+        top: 20px; /* Space from the top */
+        right: 20px; /* Space from the right side */
+      }
+
+      #download-btn:active {
+        background-color: #075985; /* Darker teal on press */
+      }
+
+      @media screen and (max-width: 480px) {
+          body{
+              flex-direction: column;
+          }
+          #barcode-input, .barcode-container {
+              width: 100%;
+          }
+      }/* Add your existing styles here */
+    </style>
+  </head>
+  <body>
+    <!-- Change the value of 'margin-bottom' in '.barcode-container' to adjust the vertical distance between barcodes -->
+    <div class="container">
+      <div id="barcode-container"></div>
+    </div>
+    <input type="text" id="barcode-input" placeholder="Paste from excel or add spaces between bins."/>
+    <button id="download-btn" disabled>Download Barcodes <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 15 12" fill="#FFFFFF">
+      <path d="M0 0h24v24H0z" fill="none"/>
+      <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M7.50005 1.04999C7.74858 1.04999 7.95005 1.25146 7.95005 1.49999V8.41359L10.1819 6.18179C10.3576 6.00605 10.6425 6.00605 10.8182 6.18179C10.994 6.35753 10.994 6.64245 10.8182 6.81819L7.81825 9.81819C7.64251 9.99392 7.35759 9.99392 7.18185 9.81819L4.18185 6.81819C4.00611 6.64245 4.00611 6.35753 4.18185 6.18179C4.35759 6.00605 4.64251 6.00605 4.81825 6.18179L7.05005 8.41359V1.49999C7.05005 1.25146 7.25152 1.04999 7.50005 1.04999ZM2.5 10C2.77614 10 3 10.2239 3 10.5V12C3 12.5539 3.44565 13 3.99635 13H11.0012C11.5529 13 12 12.5528 12 12V10.5C12 10.2239 12.2239 10 12.5 10C12.7761 10 13 10.2239 13 10.5V12C13 13.1041 12.1062 14 11.0012 14H3.99635C2.89019 14 2 13.103 2 12V10.5C2 10.2239 2.22386 10 2.5 10Z"
+      fill="#FFFFFF"
+    />
+  </svg></button>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('barcode-input').focus();
+    });
+
+    document.getElementById('barcode-input').addEventListener('keypress', function(e) {
+      if (e.which === 13) { // Enter key code is 13
+        var input = this.value;
+        if (!input || !input.trim()) return alert("Please enter a valid text");
+
+        // Clear previous barcodes
+        document.getElementById('barcode-container').innerHTML = '';
+
+        // Split the input by spaces and generate individual barcodes
+        input.split(' ').forEach(function(item) {
+          item = item.trim();
+          if (item) {
+            var div = document.createElement('div');
+
+            div.className = 'barcode-container';
+
+            var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            JsBarcode(svg, item, {
+              format: "CODE39",
+              displayValue: true,
+              lineColor : "#000000",
+              width : 1.28,
+              height : 60
+            });
+
+            div.appendChild(svg);
+            document.getElementById('barcode-container').appendChild(div);
+          }
+        });
+
+        document.getElementById('download-btn').disabled = false; // Enable the download button
+        this.focus();
+        this.select();
+      }
+    });
+
+    document.getElementById('download-btn').addEventListener('click', function() {
+      var svgElements = document.querySelectorAll('#barcode-container svg');
+      var svgString = '';
+
+      svgElements.forEach(function(svgElement, index) {
+        if (index > 0) svgString += '\n'; // Add newline between SVGs
+        svgString += svgElement.outerHTML;
+      });
+
+      var url = `data:image/svg+xml;utf8,${encodeURIComponent(svgString)}`;
+      // Create a link and set its 'href' attribute to the SVG data URL
+      var link = document.createElement("a");
+      link.download = document.getElementById('barcode-input').value + ".svg"; // Set filename as input value
+      link.href = url;
+      // Append anchor tag into body
+      document.body.appendChild(link);
+      // Click it to start download
+      link.click();
+    });
+  </script>
+</body>
+</html>
