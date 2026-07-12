@@ -1,6 +1,9 @@
 # Barcode Generator
 
+![Barcode Generator Screenshot](screenshot.png)
+
 A lightweight, client-side, zero-dependency barcode generator utility built with HTML, CSS, and vanilla JavaScript. It uses the `JsBarcode` library to render and download standard CODE39 barcodes as SVG format.
+
 
 ## Features
 
