@@ -341,7 +341,9 @@
         <div id="barcode-container"></div>
       </div>
     </div>
-    <input type="text" id="barcode-input" placeholder="Bins separated by spaces. Use / to start a new column."/>
+    <form id="barcode-form" style="width: 100%; margin: 0; padding: 0;">
+    <input type="text" id="barcode-input" placeholder="Bins separated by spaces. Use / to start a new column." enterkeyhint="done"/>
+    </form>
     <div id="format-select-wrapper">
     <select id="format-select">
       <option value="CODE39" selected>CODE39</option>
@@ -400,10 +402,15 @@
       }
     }
 
-    document.getElementById('barcode-input').addEventListener('keydown', function(e) {
+    document.getElementById('barcode-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      var input = document.getElementById('barcode-input');
+      if (!input.value || !input.value.trim()) return alert("Please enter a valid text");
+      input.dispatchEvent(new KeyboardEvent('keypress', {key:'Enter', keyCode:13, which:13, bubbles:true}));
+    });
+
+    document.getElementById('barcode-input').addEventListener('keypress', function(e) {
       if (e.key === 'Enter' || e.which === 13 || e.keyCode === 13) {
-        e.preventDefault();
-        e.stopPropagation();
         var input = this.value;
         if (!input || !input.trim()) return alert("Please enter a valid text");
 

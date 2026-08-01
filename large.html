@@ -237,7 +237,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;" id="barcode"></svg>
 
 <!-- Input field for user to enter text -->
-<input type="text" id="barcode-input" placeholder="Type here, press enter" />
+<form id="barcode-form" style="width: 100%; margin: 0; padding: 0;">
+<input type="text" id="barcode-input" placeholder="Type here, press enter" enterkeyhint="done" />
+</form>
 
   <div id="format-select-wrapper">
   <select id="format-select">
@@ -286,10 +288,15 @@
     });
 
     // Generate barcode when Enter key is pressed
-    document.getElementById('barcode-input').addEventListener('keydown', function (e) {
+    document.getElementById('barcode-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      var input = document.getElementById('barcode-input');
+      if (!input.value || !input.value.trim()) return alert("Please enter a valid text");
+      input.dispatchEvent(new KeyboardEvent('keypress', {key:'Enter', keyCode:13, which:13, bubbles:true}));
+    });
+
+    document.getElementById('barcode-input').addEventListener('keypress', function (e) {
       if (e.key === 'Enter' || e.which === 13 || e.keyCode === 13) {
-        e.preventDefault();
-        e.stopPropagation();
         var input = this.value;
 
         // Check if the input is not empty or just whitespace
