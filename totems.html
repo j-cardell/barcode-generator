@@ -9,19 +9,18 @@
         display: flex;
         justify-content: center;
         align-items: flex-start;
-        height: 100vh;
+        min-height: 100vh;
         margin: 0;
         flex-direction: column;
-        padding: 150px;
+        padding: 40px 20px 20px 20px;
         box-sizing: border-box;
         background-color: #4e4e4e; /* Less retina damage */
       }
 
       .container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 80%;
+        width: fit-content;
+        min-width: fit-content;
+        max-width: none;
         margin: 0 auto;
         padding: 20px;
         background-color: white;
@@ -29,8 +28,77 @@
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       }
 
+      #barcode-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      .barcode-column {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
       .barcode-container {
-        margin-bottom: 50px; /* This controls the vertical distance between barcodes */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        width: 2.4in;
+        min-height: 1.5in;
+        margin-bottom: 4px;
+        padding: 6px 10px 10px 10px;
+        background-color: #ffffff;
+        border: 1px solid #000000;
+        box-sizing: border-box;
+      }
+
+      .barcode-label {
+        width: 100%;
+        text-align: center;
+        font-size: 28px;
+        font-weight: bold;
+        font-family: Arial, Helvetica, sans-serif;
+        margin-bottom: 6px;
+        word-break: break-all;
+      }
+
+      .barcode-container svg {
+        width: 100% !important;
+        height: auto !important;
+        max-height: 1in;
+      }
+
+      @media print {
+        @page {
+          size: 8.5in 11in;
+          margin: 0.25in;
+        }
+        body {
+          background-color: white;
+          padding: 0;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-start;
+          align-items: center;
+        }
+        .container {
+          box-shadow: none;
+          margin: 0;
+          padding: 0;
+          border-radius: 0;
+          width: auto;
+        }
+        .barcode-container {
+          break-inside: avoid;
+          page-break-inside: avoid;
+        }
+        #barcode-input, #download-btn, #print-btn {
+          display: none !important;
+        }
       }
 
       #barcode-input {
@@ -61,10 +129,32 @@
         position: fixed; /* Set the button to be fixed */
         top: 20px; /* Space from the top */
         right: 20px; /* Space from the right side */
+        z-index: 10;
       }
 
       #download-btn:active {
         background-color: #075985; /* Darker teal on press */
+      }
+
+      #print-btn {
+        background-color: #4f46e5; /* Indigo */
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 8px;
+        position: fixed;
+        top: 70px; /* Below download button */
+        right: 20px;
+      }
+
+      #print-btn:active {
+        background-color: #3730a3;
       }
 
       @media screen and (max-width: 480px) {
@@ -82,16 +172,17 @@
     <div class="container">
       <div id="barcode-container"></div>
     </div>
-    <input type="text" id="barcode-input" placeholder="Paste from excel or add spaces between bins."/>
+    <input type="text" id="barcode-input" placeholder="Bins separated by spaces. Use / to start a new column."/>
     <button id="download-btn" disabled>Download Barcodes <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 15 12" fill="#FFFFFF">
       <path d="M0 0h24v24H0z" fill="none"/>
       <path
       fill-rule="evenodd"
       clip-rule="evenodd"
-      d="M7.50005 1.04999C7.74858 1.04999 7.95005 1.25146 7.95005 1.49999V8.41359L10.1819 6.18179C10.3576 6.00605 10.6425 6.00605 10.8182 6.18179C10.994 6.35753 10.994 6.64245 10.8182 6.81819L7.81825 9.81819C7.64251 9.99392 7.35759 9.99392 7.18185 9.81819L4.18185 6.81819C4.00611 6.64245 4.00611 6.35753 4.18185 6.18179C4.35759 6.00605 4.64251 6.00605 4.81825 6.18179L7.05005 8.41359V1.49999C7.05005 1.25146 7.25152 1.04999 7.50005 1.04999ZM2.5 10C2.77614 10 3 10.2239 3 10.5V12C3 12.5539 3.44565 13 3.99635 13H11.0012C11.5529 13 12 12.5528 12 12V10.5C12 10.2239 12.2239 10 12.5 10C12.7761 10 13 10.2239 13 10.5V12C13 13.1041 12.1062 14 11.0012 14H3.99635C2.89019 14 2 13.103 2 12V10.5C2 10.2239 2.22386 10 2.5 10Z"
+      d="M7.50005 1.04999C7.74858 1.04999 7.95005 1.25146 7.95005 1.49999V8.41359L10.1819 6.18179C10.3576 6.00605 10.6425 6.00605 10.8182 6.18179C10.994 6.35753 10.994 6.64245 10.8182 6.81819L7.81825 9.81819C7.64251 9.99392 7.35759 9.99392 7.18185 9.81819L4.18185 6.18179C4.00611 6.64245 4.00611 6.35753 4.18185 6.18179C4.35759 6.00605 4.64251 6.00605 4.81825 6.18179L7.05005 8.41359V1.49999C7.05005 1.25146 7.25152 1.04999 7.50005 1.04999ZM2.5 10C2.77614 10 3 10.2239 3 10.5V12C3 12.5539 3.44565 13 3.99635 13H11.0012C11.5529 13 12 12.5528 12 12V10.5C12 10.2239 12.2239 10 12.5 10C12.7761 10 13 10.2239 13 10.5V12C13 13.1041 12.1062 14 11.0012 14H3.99635C2.89019 14 2 13.103 2 12V10.5C2 10.2239 2.22386 10 2.5 10Z"
       fill="#FFFFFF"
     />
   </svg></button>
+    <button id="print-btn" disabled>Print Barcodes</button>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('barcode-input').focus();
@@ -105,29 +196,44 @@
         // Clear previous barcodes
         document.getElementById('barcode-container').innerHTML = '';
 
-        // Split the input by spaces and generate individual barcodes
-        input.split(' ').forEach(function(item) {
-          item = item.trim();
-          if (item) {
-            var div = document.createElement('div');
+        // Split by '/' to delimit columns, then split each column by spaces for items
+        var columns = input.split('/').map(function(col) {
+          return col.trim().split(/\s+/).filter(function(item) { return item; });
+        }).filter(function(col) { return col.length > 0; });
 
+        columns.forEach(function(items) {
+          var columnDiv = document.createElement('div');
+          columnDiv.className = 'barcode-column';
+
+          // Reverse the items in this column so last input appears at top
+          items.slice().reverse().forEach(function(item) {
+            var div = document.createElement('div');
             div.className = 'barcode-container';
+
+            var label = document.createElement('div');
+            label.className = 'barcode-label';
+            label.textContent = item;
+            div.appendChild(label);
 
             var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
             JsBarcode(svg, item, {
               format: "CODE39",
               displayValue: true,
               lineColor : "#000000",
-              width : 1.28,
-              height : 60
+              width : 1.5,
+              height : 80,
+              fontSize: 16
             });
 
             div.appendChild(svg);
-            document.getElementById('barcode-container').appendChild(div);
-          }
+            columnDiv.appendChild(div);
+          });
+
+          document.getElementById('barcode-container').appendChild(columnDiv);
         });
 
         document.getElementById('download-btn').disabled = false; // Enable the download button
+        document.getElementById('print-btn').disabled = false; // Enable the print button
         this.focus();
         this.select();
       }
@@ -151,6 +257,10 @@
       document.body.appendChild(link);
       // Click it to start download
       link.click();
+    });
+
+    document.getElementById('print-btn').addEventListener('click', function() {
+      window.print();
     });
   </script>
 </body>
