@@ -2,8 +2,10 @@
 <html>
   <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Barcode Generator - Totems</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.6/JsBarcode.all.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
       body {
         display: flex;
@@ -14,18 +16,34 @@
         flex-direction: column;
         padding: 40px 20px 20px 20px;
         box-sizing: border-box;
-        background-color: #4e4e4e; /* Less retina damage */
+        background-color: #4e4e4e;
+        font-family: Arial, sans-serif;
       }
 
       .container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 0;
+        background-color: transparent;
+        box-shadow: none;
+        margin: 0;
+      }
+
+      .barcode-sheet {
         width: fit-content;
         min-width: fit-content;
         max-width: none;
-        margin: 0 auto;
+        margin: 20px auto 0 auto;
         padding: 20px;
         background-color: white;
         border-radius: 10px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .barcode-sheet:has(#barcode-container:empty) {
+        display: none;
       }
 
       #barcode-container {
@@ -96,48 +114,117 @@
           break-inside: avoid;
           page-break-inside: avoid;
         }
-        #barcode-input, #download-btn, #print-btn {
+        #barcode-input, #download-btn, #print-btn, #format-select-wrapper, .nav-links {
           display: none !important;
         }
       }
 
       #barcode-input {
-        width: 98%; /* Adjust as needed */
-        padding: 25px; /* Add some space within the box for easier typing */
-        font-size: 48px; /* Increase the font size */
-        border: none; /* Remove default border */
-        border-radius: 7px; /* Add rounded corners */
+        width: 100%;
+        padding: 25px;
+        font-size: 48px;
+        border: none;
+        border-radius: 7px;
         background-color: #f5f5f5;
-        margin-bottom: 20px; /* Add space below the barcode for better readability */
-        text-align: center; /* Align text to center */
-        transform: scaleX(1); /* Reset any previous transformations (like from the SVG code) */
-        white-space: nowrap; /* Make sure the text doesn't wrap to a new line */
+        margin-bottom: 20px;
+        text-align: center;
+        transform: scaleX(1);
+        white-space: nowrap;
+        box-sizing: border-box;
       }
 
-      #download-btn {
-        background-color: #0369a1; /* Material-You teal color */
-        border: none;
-        color: white;
-        padding: 15px 32px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        margin: 4px 2px;
-        cursor: pointer;
-        border-radius: 8px; /* Add rounded corners */
-        position: fixed; /* Set the button to be fixed */
-        top: 20px; /* Space from the top */
-        right: 20px; /* Space from the right side */
+      #barcode-input::placeholder,
+      #barcode-input::-webkit-input-placeholder,
+      #barcode-input::-moz-placeholder,
+      #barcode-input:-ms-input-placeholder {
+        font-size: clamp(11px, 1.5vw, 16px);
+        opacity: 1;
+      }
+
+      #format-select-wrapper {
+        position: fixed;
+        top: 20px;
+        left: 20px;
         z-index: 10;
       }
 
-      #download-btn:active {
-        background-color: #075985; /* Darker teal on press */
+      #format-select {
+        background-color: #0369a1;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 15px 48px 15px 24px;
+        font-size: 16px;
+        cursor: pointer;
+        min-width: 170px;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        text-align: left;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 16px center;
       }
 
-      #print-btn {
-        background-color: #4f46e5; /* Indigo */
+      #format-select-wrapper {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 10;
+      }
+
+      #format-select option, #format-select optgroup {
+        color: black;
+        background-color: white;
+      }
+
+      @media print {
+        #barcode-input, #download-btn, #print-btn, #format-select-wrapper, .page-nav-btns {
+          display: none !important;
+        }
+      }
+
+      .page-nav-btns {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .page-nav-btns a {
+        background-color: #0369a1;
+        color: white;
+        text-decoration: none;
+        padding: 15px 32px;
+        border-radius: 8px;
+        font-size: 16px;
+        text-align: center;
+        display: inline-block;
+      }
+
+      .page-nav-btns a:hover {
+        background-color: #075985;
+      }
+
+      .page-nav-btns a:active {
+        background-color: #075985;
+      }
+
+      .barcode-error {
+        color: #dc2626;
+        font-size: 12px;
+        padding: 8px;
+        text-align: center;
+        font-weight: bold;
+      }
+
+      .barcode-container.has-error {
+        border-color: #dc2626;
+        background-color: #fef2f2;
+      }
+
+      #download-btn, #print-btn {
+        background-color: #0369a1;
         border: none;
         color: white;
         padding: 15px 32px;
@@ -149,8 +236,22 @@
         cursor: pointer;
         border-radius: 8px;
         position: fixed;
-        top: 70px; /* Below download button */
         right: 20px;
+        min-width: 170px;
+        z-index: 10;
+      }
+
+      #download-btn {
+        top: 20px;
+      }
+
+      #print-btn {
+        top: 75px;
+        background-color: #4f46e5;
+      }
+
+      #download-btn:active {
+        background-color: #075985;
       }
 
       #print-btn:active {
@@ -158,21 +259,112 @@
       }
 
       @media screen and (max-width: 480px) {
-          body{
-              flex-direction: column;
-          }
-          #barcode-input, .barcode-container {
-              width: 100%;
-          }
+        body {
+          padding: 10px;
+          justify-content: flex-start;
+          height: auto;
+          min-height: 100vh;
+        }
+
+        .barcode-sheet {
+          width: 100%;
+          max-width: 100%;
+          overflow-x: auto;
+          margin: 10px 0 0 0;
+          padding: 10px;
+          box-sizing: border-box;
+        }
+
+        #barcode-container {
+          flex-direction: column;
+          align-items: center;
+          width: 100%;
+        }
+
+        .barcode-column {
+          width: 100%;
+          align-items: center;
+        }
+
+        .barcode-container {
+          width: 100%;
+          max-width: 2.4in;
+        }
+
+        #barcode-input {
+          width: 100%;
+          font-size: clamp(16px, 5vw, 24px);
+          padding: 15px;
+          margin-bottom: 10px;
+        }
+
+        #barcode-input::placeholder,
+        #barcode-input::-webkit-input-placeholder,
+        #barcode-input::-moz-placeholder,
+        #barcode-input:-ms-input-placeholder {
+          font-size: clamp(12px, 4vw, 18px);
+        }
+
+        #format-select-wrapper {
+          position: static;
+          width: 100%;
+          margin-bottom: 10px;
+        }
+
+        #format-select {
+          width: 100%;
+        }
+
+        #download-btn, #print-btn {
+          position: static;
+          width: 100%;
+          margin: 4px 0;
+          right: auto;
+          top: auto;
+        }
+
+        .page-nav-btns {
+          width: 100%;
+        }
+
+        .page-nav-btns a {
+          width: 100%;
+          box-sizing: border-box;
+        }
       }/* Add your existing styles here */
     </style>
   </head>
   <body>
     <!-- Change the value of 'margin-bottom' in '.barcode-container' to adjust the vertical distance between barcodes -->
     <div class="container">
-      <div id="barcode-container"></div>
+      <div class="barcode-sheet">
+        <div id="barcode-container"></div>
+      </div>
     </div>
     <input type="text" id="barcode-input" placeholder="Bins separated by spaces. Use / to start a new column."/>
+    <div id="format-select-wrapper">
+    <select id="format-select">
+      <option value="CODE39" selected>CODE39</option>
+      <option value="CODE128">CODE128</option>
+      <option value="EAN13">EAN13</option>
+      <option value="UPC">UPC</option>
+      <optgroup label="More">
+        <option value="CODE128A">CODE128A</option>
+        <option value="CODE128B">CODE128B</option>
+        <option value="CODE128C">CODE128C</option>
+        <option value="EAN8">EAN8</option>
+        <option value="EAN5">EAN5</option>
+        <option value="EAN2">EAN2</option>
+        <option value="ITF">ITF</option>
+        <option value="ITF14">ITF14</option>
+        <option value="MSI">MSI</option>
+        <option value="MSI10">MSI10</option>
+        <option value="MSI11">MSI11</option>
+        <option value="MSI1010">MSI1010</option>
+        <option value="MSI1110">MSI1110</option>
+      </optgroup>
+    </select>
+    </div>
     <button id="download-btn" disabled>Download Barcodes <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 15 12" fill="#FFFFFF">
       <path d="M0 0h24v24H0z" fill="none"/>
       <path
@@ -183,10 +375,30 @@
     />
   </svg></button>
     <button id="print-btn" disabled>Print Barcodes</button>
+    <div class="page-nav-btns">
+      <a href="index.html"><i class="fas fa-barcode"></i> Standard</a>
+      <a href="large.html"><i class="fas fa-expand"></i> Full Page</a>
+    </div>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('barcode-input').focus();
+      adjustPlaceholder();
     });
+    window.addEventListener('resize', adjustPlaceholder);
+
+    function adjustPlaceholder() {
+      var input = document.getElementById('barcode-input');
+      if (window.innerWidth <= 1700) {
+        if (!input.getAttribute('data-desktop-placeholder')) {
+          input.setAttribute('data-desktop-placeholder', input.placeholder);
+        }
+        input.placeholder = "Bins by spaces, / for column";
+      } else {
+        if (input.getAttribute('data-desktop-placeholder')) {
+          input.placeholder = input.getAttribute('data-desktop-placeholder');
+        }
+      }
+    }
 
     document.getElementById('barcode-input').addEventListener('keypress', function(e) {
       if (e.which === 13) { // Enter key code is 13
@@ -216,16 +428,44 @@
             div.appendChild(label);
 
             var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-            JsBarcode(svg, item, {
-              format: "CODE39",
-              displayValue: true,
-              lineColor : "#000000",
-              width : 1.5,
-              height : 80,
-              fontSize: 16
-            });
+            var format = document.getElementById('format-select').value;
 
-            div.appendChild(svg);
+            function formatErrorMessage(item, fmt) {
+              var rules = {
+                'EAN13': 'EAN13 requires exactly 13 digits',
+                'EAN8': 'EAN8 requires exactly 8 digits',
+                'EAN5': 'EAN5 requires exactly 5 digits',
+                'EAN2': 'EAN2 requires exactly 2 digits',
+                'UPC': 'UPC requires exactly 12 digits',
+                'ITF': 'ITF requires an even number of digits',
+                'ITF14': 'ITF14 requires exactly 14 digits',
+                'MSI': 'MSI barcodes support digits only',
+                'MSI10': 'MSI10 supports digits only',
+                'MSI11': 'MSI11 supports digits only',
+                'MSI1010': 'MSI1010 supports digits only',
+                'MSI1110': 'MSI1110 supports digits only'
+              };
+              return '⚠ ' + item + ': ' + (rules[fmt] || 'Invalid characters for ' + fmt);
+            }
+
+            try {
+              JsBarcode(svg, item, {
+                format: format,
+                displayValue: true,
+                lineColor : "#000000",
+                width : 1.5,
+                height : 80,
+                fontSize: 16
+              });
+              div.appendChild(svg);
+            } catch (err) {
+              var errorDiv = document.createElement('div');
+              errorDiv.className = 'barcode-error';
+              errorDiv.textContent = formatErrorMessage(item, format);
+              div.classList.add('has-error');
+              div.appendChild(errorDiv);
+            }
+
             columnDiv.appendChild(div);
           });
 
@@ -251,7 +491,14 @@
       var url = `data:image/svg+xml;utf8,${encodeURIComponent(svgString)}`;
       // Create a link and set its 'href' attribute to the SVG data URL
       var link = document.createElement("a");
-      link.download = document.getElementById('barcode-input').value + ".svg"; // Set filename as input value
+
+      // Filename: first entry _ last entry (from the original input order)
+      var rawInput = document.getElementById('barcode-input').value;
+      var allEntries = rawInput.split(/\s+|\//).map(function(item) { return item.trim(); }).filter(function(item) { return item; });
+      var firstEntry = allEntries[0] || 'barcodes';
+      var lastEntry = allEntries[allEntries.length - 1] || 'barcodes';
+      link.download = firstEntry + "_" + lastEntry + ".svg";
+
       link.href = url;
       // Append anchor tag into body
       document.body.appendChild(link);
