@@ -286,8 +286,10 @@
     });
 
     // Generate barcode when Enter key is pressed
-    document.getElementById('barcode-input').addEventListener('keypress', function (e) {
-      if (e.which === 13) { // Enter key code is 13
+    document.getElementById('barcode-input').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.which === 13 || e.keyCode === 13) {
+        e.preventDefault();
+        e.stopPropagation();
         var input = this.value;
 
         // Check if the input is not empty or just whitespace
