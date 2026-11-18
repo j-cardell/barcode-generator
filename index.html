@@ -76,7 +76,7 @@
             cursor: pointer;
             border-radius: 8px;
         }
-        #upright-totems-btn, #full-page-btn {
+        #upright-totems-btn, #full-page-btn, #designer-btn {
             background-color: #0369a1;
             border: none;
             color: white;
@@ -89,7 +89,7 @@
             cursor: pointer;
             border-radius: 8px;
         }
-        #download-btn:active, #upright-totems-btn:active, #full-page-btn:active {
+        #download-btn:active, #upright-totems-btn:active, #full-page-btn:active, #designer-btn:active {
             background-color: #075985;
         }
         #format-select-wrapper {
@@ -120,7 +120,7 @@
             background-color: white;
         }
         @media print {
-            #format-select-wrapper, #download-btn {
+            #format-select-wrapper, #download-btn, #upright-totems-btn, #full-page-btn, #designer-btn {
                 display: none;
             }
         }
@@ -168,7 +168,7 @@
             #format-select {
                 width: 100%;
             }
-            #upright-totems-btn, #full-page-btn {
+            #upright-totems-btn, #full-page-btn, #designer-btn {
                 width: 100%;
                 margin: 4px 0;
             }
@@ -216,6 +216,10 @@
         Full Page
         <i class="fas fa-expand"></i> <!-- FontAwesome expand icon -->
     </button>
+    <button id="designer-btn">
+        Label Designer
+        <i class="fas fa-tags"></i> <!-- FontAwesome tags icon -->
+    </button>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('barcode-input').focus();
@@ -255,6 +259,10 @@
 
         document.getElementById('full-page-btn').addEventListener('click', function() {
             window.location.href = "large.html";
+        });
+
+        document.getElementById('designer-btn').addEventListener('click', function() {
+            window.location.href = "designer.html";
         });
     </script>
 </body>
